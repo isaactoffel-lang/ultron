@@ -1,49 +1,17 @@
 # Ultron
 
-A native macOS workspace for reading local Markdown notes and working with checklist tasks.
+**Local Markdown · SwiftUI workspace**
 
-[Read the case study](CASE_STUDY.md) · [Save behavior](#save-behavior) · [Publication scope](PUBLICATION.md)
+Ultron reads ordinary Markdown files and presents their checklist tasks in a native macOS workspace. The main engineering question is how to update a note when another editor can change the same file.
 
-## Keep the file useful
+## Run the review
 
-Ultron is built around a local Markdown vault. The underlying notes remain ordinary files, so the workspace needs to coexist with changes made outside the application.
-
-The workflow component is a focused example of that problem. It reads a checklist, lets the user change a task, and checks whether the note changed before saving.
-
-## Save behavior
-
-```mermaid
-flowchart TD
-    note["Read Markdown note"] --> checklist["Show checklist"]
-    checklist --> edit["User changes a task"]
-    edit --> compare{"Has the note changed?"}
-    compare -->|Yes| reload["Report change and reload"]
-    compare -->|No| save["Save to the intended note"]
+```sh
+python checklist_review.py
 ```
 
-The important behavior is the branch after the comparison. A stale view needs to be reconciled before it becomes a write to the file.
+The [standalone example](checklist_review.py) opens a temporary note, simulates an external change, and verifies that a stale save leaves the external edit intact. It then reopens the file, completes the task, and verifies that only the checkbox changed. It also rejects an ambiguous task label.
 
-## Architecture
+[Read the persistence case study](CASE_STUDY.md) · [Publication scope](PUBLICATION.md)
 
-| Layer | Responsibility |
-| --- | --- |
-| Markdown records | Keep the notes readable outside the application |
-| Parsing | Turn checklist content into display models |
-| SwiftUI presentation | Show the note and available task interactions |
-| Persistence | Write to the intended record and surface failures |
-
-## Design decisions
-
-**Respect external edits.** The application is not the only place where a Markdown note can change. Checking before a save makes that conflict visible.
-
-**Keep the storage understandable.** Ordinary files make the underlying records accessible without requiring the interface to remain available.
-
-**Report failures where they occur.** A failed read, a changed note, and a failed save are different situations. Treating them as the same empty screen would leave the user guessing.
-
-The comparison is not a file lock. The [case study](CASE_STUDY.md) explains that limitation and the difference between a focused component and the full personal application.
-
-## Scope and contribution
-
-This publication documents the architecture and workflow behavior. Application code, vault contents, sample files, screenshots, connection settings, and development history remain private.
-
-AI assisted with implementation, debugging, checks, and documentation. This editorial review does not establish that every live integration in the full application works. [Publication policy](PUBLICATION.md)
+The AI-assisted Python example models the save decision independently of the SwiftUI application. It uses no personal notes.

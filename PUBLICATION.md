@@ -2,15 +2,15 @@
 
 ## What belongs here
 
-This repository contains a public project overview and supporting case-study documentation. It explains the problem, workflow, architecture, engineering tradeoffs, attribution, and known limits.
+This repository publishes project descriptions and case-study material. Public examples are written for review and use invented inputs or blank templates.
 
-Original source code, operational records, account configuration, attachments, screenshots, and development history are retained privately. This publication does not provide a runnable application or establish a working live integration.
+Original source code, operational records, account configuration, attachments, screenshots, and development history are retained privately. Runnable public examples are standalone exercises. They establish only the behavior they directly check.
 
 ## What stays private
 
-Public files must exclude prices, financial figures, numeric results, email addresses, contact details, personal records, credentials, service identifiers, and account configuration. Do not introduce examples, diagrams, links, or attachments that expose them.
+Public files must exclude prices, numeric figures, email addresses, contact details, personal records, credentials, service identifiers, and account configuration. Do not introduce examples, diagrams, links, or attachments that expose them.
 
-Do not restore private source, sample datasets, notebooks, screenshots, logs, or history to this repository. Changing a public file does not remove a copy that remains in its earlier history.
+Do not restore private source, datasets, notebooks, screenshots, logs, or history to this repository. Changing a public file does not remove a copy that remains in its earlier history.
 
 ## Describe evidence accurately
 
