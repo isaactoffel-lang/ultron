@@ -1,30 +1,49 @@
 # Ultron
 
-A native macOS workspace for reading notes and working with Markdown tasks.
+A native macOS workspace for reading local Markdown notes and working with checklist tasks.
 
-## The problem
+[Read the case study](CASE_STUDY.md) · [Save behavior](#save-behavior) · [Publication scope](PUBLICATION.md)
 
-Personal information can become scattered across files and applications. Ultron provides a common interface while keeping the underlying notes accessible as ordinary files.
+## Keep the file useful
 
-## Implementation
+Ultron is built around a local Markdown vault. The underlying notes remain ordinary files, so the workspace needs to coexist with changes made outside the application.
 
-The private application uses SwiftUI and a local Markdown vault. The previously extracted workflow component reads checklist tasks, updates their completion state, and checks whether a note changed before saving.
+The workflow component is a focused example of that problem. It reads a checklist, lets the user change a task, and checks whether the note changed before saving.
+
+## Save behavior
+
+```mermaid
+flowchart TD
+    note["Read Markdown note"] --> checklist["Show checklist"]
+    checklist --> edit["User changes a task"]
+    edit --> compare{"Has the note changed?"}
+    compare -->|Yes| reload["Report change and reload"]
+    compare -->|No| save["Save to the intended note"]
+```
+
+The important behavior is the branch after the comparison. A stale view needs to be reconciled before it becomes a write to the file.
+
+## Architecture
 
 | Layer | Responsibility |
 | --- | --- |
-| Local records | Keep notes in readable Markdown |
-| Parsing | Turn note content into display models |
-| Presentation | Provide native reading and workflow views |
-| Persistence | Write to the intended record and report failures |
+| Markdown records | Keep the notes readable outside the application |
+| Parsing | Turn checklist content into display models |
+| SwiftUI presentation | Show the note and available task interactions |
+| Persistence | Write to the intended record and surface failures |
 
 ## Design decisions
 
-Keep the files useful outside the application. Report read and write failures. Check for external edits before saving so the application can ask the user to review a changed note.
+**Respect external edits.** The application is not the only place where a Markdown note can change. Checking before a save makes that conflict visible.
 
-The compare-before-save behavior is not a file lock. The presence of connection code does not establish that a live service is connected.
+**Keep the storage understandable.** Ordinary files make the underlying records accessible without requiring the interface to remain available.
 
-## Public scope
+**Report failures where they occur.** A failed read, a changed note, and a failed save are different situations. Treating them as the same empty screen would leave the user guessing.
 
-This repository is a qualitative architecture writeup. Application code, sample vaults, screenshots, personal records, connection settings, and earlier development history are retained privately.
+The comparison is not a file lock. The [case study](CASE_STUDY.md) explains that limitation and the difference between a focused component and the full personal application.
 
-AI assisted with implementation, debugging, checks, and documentation. Publishing this writeup does not revalidate the full application.
+## Scope and contribution
+
+This publication documents the architecture and workflow behavior. Application code, vault contents, sample files, screenshots, connection settings, and development history remain private.
+
+AI assisted with implementation, debugging, checks, and documentation. This editorial review does not establish that every live integration in the full application works. [Publication policy](PUBLICATION.md)
